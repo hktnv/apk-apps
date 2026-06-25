@@ -1,13 +1,13 @@
-# ADR 0004: No Background Runtime Dependencies
+# ADR 0004: Arka Plan Runtime Bağımlılığı Yok
 
-## Status
+## Durum
 
-Accepted
+Kabul edildi
 
-## Decision
+## Karar
 
-The service does not depend on Redis, queues, scheduler jobs, mail, or hidden observers.
+Servis Redis, queue, scheduler job, mail veya gizli observer bağımlılığı taşımaz.
 
-## Consequences
+## Sonuçlar
 
-Operations remain simple for a small private release service. All release actions are explicit request/response flows.
+Küçük ve özel bir release servisi için operasyon sade kalır. Tüm release işlemleri açık request/response akışlarıdır.

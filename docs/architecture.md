@@ -1,41 +1,41 @@
-# Architecture
+# Mimari
 
-APK Apps uses context-oriented layering:
+APK Apps context odaklı katmanlama kullanır:
 
-- `IdentityAccess`: admin users, login, logout, and admin creation command.
-- `ApplicationCatalog`: managed Android applications and package names.
-- `ReleaseDistribution`: APK validation, artifact storage, release publishing, rollback, update checks, and downloads.
-- `SharedKernel`: small cross-context contracts such as identifiers, clocks, transactions, and operation results.
+- `IdentityAccess`: admin kullanıcıları, giriş, çıkış ve admin oluşturma komutu.
+- `ApplicationCatalog`: yönetilen Android uygulamaları ve paket adları.
+- `ReleaseDistribution`: APK doğrulama, çıktı depolama, sürüm yayınlama, rollback, güncelleme kontrolleri ve indirme akışları.
+- `SharedKernel`: identifier, clock, transaction ve operation result gibi context'ler arası küçük sözleşmeler.
 
-## Dependency Direction
+## Bağımlılık Yönü
 
-Presentation calls application use cases. Application code depends on domain objects and ports. Infrastructure implements ports and talks to Laravel persistence, storage, and framework facilities.
+Presentation katmanı application use case'lerini çağırır. Application kodu domain nesnelerine ve port sözleşmelerine bağlıdır. Infrastructure katmanı portları uygular ve Laravel kalıcılık, depolama ve framework imkanlarıyla konuşur.
 
 ```text
 Presentation -> Application -> Domain
 Infrastructure -> Application / Domain
-SharedKernel is reusable support code.
+SharedKernel yeniden kullanılabilir destek kodudur.
 ```
 
-Deptrac enforces these boundaries.
+Bu sınırlar Deptrac ile denetlenir.
 
-## Persistence
+## Kalıcılık
 
-PostgreSQL stores:
+PostgreSQL şu verileri saklar:
 
 - `admin_users`
 - `managed_applications`
 - `apk_releases`
 - `release_publications`
-- Laravel `sessions` and `cache`
+- Laravel `sessions` ve `cache`
 
-APK files are stored on the configured `apks` filesystem disk. The database stores metadata, path, size, SHA-256 hash, and publication history.
+APK dosyaları yapılandırılmış `apks` filesystem diskinde saklanır. Veritabanı metadata, path, size, SHA-256 hash ve yayın geçmişini tutar.
 
-## Release Lifecycle
+## Sürüm Yaşam Döngüsü
 
-1. Admin creates a managed application.
-2. Admin uploads an APK. The release is draft only.
-3. Admin publishes a release to `stable`, `beta`, or `internal`.
-4. Android client checks for updates by package name, channel, and current version code.
-5. Client downloads only the currently published artifact.
-6. Admin can rollback a channel to an older uploaded release.
+1. Admin yönetilen uygulama kaydı oluşturur.
+2. Admin APK yükler. Sürüm yalnızca taslak olarak kalır.
+3. Admin sürümü `stable`, `beta` veya `internal` kanalına yayınlar.
+4. Android istemcisi paket adı, kanal ve mevcut version code ile güncelleme kontrolü yapar.
+5. İstemci yalnızca o anda yayınlanmış çıktı dosyasını indirir.
+6. Admin bir kanalı daha eski bir yüklü sürüme rollback edebilir.

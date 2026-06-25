@@ -1,13 +1,13 @@
 openapi: 3.1.0
 info:
-  title: APK Apps Client API
+  title: APK Apps İstemci API
   version: 1.0.0
 servers:
   - url: https://apk.habersoft.com
 paths:
   /api/v1/applications/{packageName}/channels/{channel}/update-check:
     get:
-      summary: Check whether an Android app has an available update.
+      summary: Android uygulaması için kullanılabilir güncelleme olup olmadığını kontrol eder.
       parameters:
         - name: packageName
           in: path
@@ -29,7 +29,7 @@ paths:
             minimum: 1
       responses:
         "200":
-          description: Update decision.
+          description: Güncelleme kararı.
           content:
             application/json:
               schema:
@@ -73,12 +73,12 @@ paths:
                   meta:
                     type: object
         "404":
-          description: Application not found.
+          description: Uygulama bulunamadı.
         "422":
-          description: Invalid channel or query.
+          description: Kanal veya sorgu geçersiz.
   /api/v1/artifacts/{releaseId}/download:
     get:
-      summary: Download a published APK artifact.
+      summary: Yayınlanmış APK çıktı dosyasını indirir.
       parameters:
         - name: releaseId
           in: path
@@ -87,7 +87,7 @@ paths:
             type: string
       responses:
         "200":
-          description: APK binary.
+          description: APK binary içeriği.
           headers:
             X-APK-SHA256:
               schema:
@@ -101,6 +101,6 @@ paths:
                 type: string
                 format: binary
         "404":
-          description: Release is not published or does not exist.
+          description: Sürüm yayınlanmamış veya mevcut değil.
         "500":
-          description: Artifact metadata exists but the file is unavailable.
+          description: Çıktı metadata mevcut ancak dosya erişilebilir değil.

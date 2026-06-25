@@ -1,13 +1,13 @@
-# ADR 0001: Context Layering
+# ADR 0001: Context Katmanlaması
 
-## Status
+## Durum
 
-Accepted
+Kabul edildi
 
-## Decision
+## Karar
 
-The app is organized by bounded context with explicit `Presentation`, `Application`, `Domain`, and `Infrastructure` layers.
+Uygulama bounded context yapısıyla ve açık `Presentation`, `Application`, `Domain`, `Infrastructure` katmanlarıyla organize edilir.
 
-## Consequences
+## Sonuçlar
 
-Controllers stay thin, business decisions stay testable, and infrastructure can change without rewriting domain policy.
+Controller sınıfları ince kalır, iş kararları test edilebilir olur ve infrastructure değişiklikleri domain politikasını yeniden yazmayı gerektirmez.

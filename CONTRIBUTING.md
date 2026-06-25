@@ -1,17 +1,17 @@
-# Contributing
+# Katkı Rehberi
 
-## Development Rules
+## Geliştirme Kuralları
 
-- Keep business rules inside context-specific `Domain` and `Application` namespaces.
-- Keep controllers thin; they should validate requests and call use cases.
-- Do not introduce `app/Services`, `app/Repositories`, or global helper folders.
-- Do not introduce hidden observers, queues, scheduler jobs, mail, Redis, or provider scraping.
-- Every upload must remain draft until explicitly published.
-- Draft artifacts must not be downloadable through the public API.
+- İş kurallarını ilgili context altındaki `Domain` ve `Application` namespace'lerinde tutun.
+- Controller sınıfları ince kalmalı; yalnızca istek doğrulamalı ve use case çağırmalıdır.
+- `app/Services`, `app/Repositories` veya global yardımcı klasörleri eklemeyin.
+- Gizli observer, queue, scheduler job, mail, Redis veya sağlayıcı kazıma akışları eklemeyin.
+- Her APK yüklemesi açıkça yayınlanana kadar taslak kalmalıdır.
+- Taslak çıktı dosyaları genel erişimli API üzerinden indirilemez olmalıdır.
 
-## Before Opening a PR
+## PR Açmadan Önce
 
-Run:
+Çalıştırın:
 
 ```powershell
 docker compose exec app composer validate --strict
@@ -22,4 +22,4 @@ docker compose exec app vendor/bin/deptrac analyse
 docker compose exec app npm run build
 ```
 
-Document database, API, or operational changes under `docs/`.
+Veritabanı, API veya operasyonel değişiklikleri `docs/` altında belgeleyin.

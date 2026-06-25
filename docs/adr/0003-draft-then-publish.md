@@ -1,13 +1,13 @@
-# ADR 0003: Draft Then Publish Releases
+# ADR 0003: Önce Taslak, Sonra Yayın
 
-## Status
+## Durum
 
-Accepted
+Kabul edildi
 
-## Decision
+## Karar
 
-APK uploads create draft releases. Public download and update-check behavior only considers releases that have explicit publication records.
+APK yüklemeleri taslak sürüm oluşturur. Genel erişimli indirme ve update-check davranışı yalnızca açık publication kaydı olan sürümleri dikkate alır.
 
-## Consequences
+## Sonuçlar
 
-Accidental uploads cannot become visible to Android clients until an admin publishes them.
+Yanlışlıkla yüklenen APK dosyaları admin tarafından yayınlanana kadar Android istemcilere görünür olmaz.

@@ -1,26 +1,26 @@
-# Operations
+# Operasyon
 
-## Health
+## Sağlık
 
-- `GET /health/live`: process is alive.
-- `GET /health/ready`: database and storage are reachable.
+- `GET /health/live`: süreç çalışıyor.
+- `GET /health/ready`: veritabanı ve storage erişilebilir.
 
-## Backup
+## Yedekleme
 
-Back up PostgreSQL and the APK artifact volume together. Database metadata without artifacts is incomplete.
+PostgreSQL ve APK çıktı volume'unu birlikte yedekleyin. Çıktı dosyaları olmadan veritabanı metadata tek başına eksiktir.
 
-Example scripts are in `ops/deployment/`.
+Örnek scriptler `ops/deployment/` altında bulunur.
 
-## Restore
+## Geri Yükleme
 
-1. Stop web traffic.
-2. Restore database.
-3. Restore `storage/app/apks`.
-4. Run `php artisan migrate --force`.
-5. Check `/health/ready`.
+1. Web trafiğini durdurun.
+2. Veritabanını geri yükleyin.
+3. `storage/app/apks` içeriğini geri yükleyin.
+4. `php artisan migrate --force` çalıştırın.
+5. `/health/ready` kontrolünü yapın.
 
-## Incident Notes
+## Olay Notları
 
-- If an APK file is missing, public download returns `ARTIFACT_UNAVAILABLE`.
-- If a draft release is requested, public download returns not found.
-- Rollback creates a new publication record; it does not mutate old history.
+- APK dosyası eksikse genel erişimli indirme `ARTIFACT_UNAVAILABLE` döner.
+- Taslak bir sürüm istenirse genel erişimli indirme bulunamadı döner.
+- Rollback yeni bir publication kaydı oluşturur; eski geçmişi değiştirmez.

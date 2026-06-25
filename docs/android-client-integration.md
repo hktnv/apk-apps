@@ -1,20 +1,20 @@
-# Android Client Integration
+# Android İstemci Entegrasyonu
 
-Android clients should call the update-check endpoint at app start or from a controlled update screen.
+Android istemcileri uygulama başlangıcında veya kontrollü bir güncelleme ekranında update-check endpoint'ini çağırmalıdır.
 
-Example:
+Örnek:
 
 ```http
 GET https://apk.habersoft.com/api/v1/applications/com.habersoft.player/channels/stable/update-check?current_version_code=12
 ```
 
-Statuses:
+Durumlar:
 
-- `UPDATE_AVAILABLE`: show release notes and download URL.
-- `UP_TO_DATE`: no action.
-- `CLIENT_AHEAD`: installed build is newer than published channel.
-- `NO_RELEASE`: channel has no published release.
+- `UPDATE_AVAILABLE`: release notes ve download URL gösterilir.
+- `UP_TO_DATE`: işlem gerekmez.
+- `CLIENT_AHEAD`: kurulu build yayınlanmış kanaldan daha yenidir.
+- `NO_RELEASE`: kanalda yayınlanmış sürüm yoktur.
 
-If `required` is true, the client should block normal use until the update is installed.
+`required` true ise istemci güncelleme kurulana kadar normal kullanımı engellemelidir.
 
-Downloaded APKs must be verified against the `sha256` field or `X-APK-SHA256` response header before install handoff.
+İndirilen APK dosyası kurulum akışına verilmeden önce `sha256` alanı veya `X-APK-SHA256` response header değeriyle doğrulanmalıdır.

@@ -1,13 +1,13 @@
-# ADR 0002: PostgreSQL and Docker Runtime
+# ADR 0002: PostgreSQL ve Docker Çalışma Zamanı
 
-## Status
+## Durum
 
-Accepted
+Kabul edildi
 
-## Decision
+## Karar
 
-PostgreSQL 17 is the only supported database. Production runtime uses Nginx, PHP-FPM, and PostgreSQL through Docker Compose.
+Desteklenen tek veritabanı PostgreSQL 17'dir. Üretim çalışma zamanı Docker Compose üzerinden Nginx, PHP-FPM ve PostgreSQL kullanır.
 
-## Consequences
+## Sonuçlar
 
-The local and production database behavior stays consistent. The app avoids SQLite-only behavior in feature tests where release metadata matters.
+Yerel ve üretim veritabanı davranışı tutarlı kalır. Sürüm metadata bilgisi açısından önemli özellik testlerinde uygulama SQLite'a özel davranışlardan kaçınır.

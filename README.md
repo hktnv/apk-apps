@@ -1,22 +1,22 @@
 # apk-apps
 
-APK Apps is a private APK release distribution service for Android applications. It provides an admin panel for uploading draft APK releases, publishing releases to `stable`, `beta`, or `internal` channels, rolling back channels, and a small Android client API for update checks and artifact downloads.
+APK Apps, Android uygulamaları için özel bir APK sürüm dağıtım servisidir. Taslak APK sürümü yükleme, sürümleri `stable`, `beta` veya `internal` kanallarına yayınlama, kanal geri alma, güncelleme kontrolü ve APK indirme akışlarını sağlar.
 
-The runtime stack is Laravel 13, PHP 8.4, PostgreSQL 17, Nginx, PHP-FPM, Blade, and Vite.
+Çalışma zamanı yığını Laravel 13, PHP 8.4, PostgreSQL 17, Nginx, PHP-FPM, Blade ve Vite üzerine kuruludur.
 
-## Purpose
+## Amaç
 
-`apk-apps` is a central version control and distribution service for Android/Kotlin APK projects distributed outside Play Store. Android apps call the API with their `package_name` and `versionCode`; the service returns the latest published release, whether the update is required, and the APK download URL.
+`apk-apps`, Play Store dışından dağıtılan Android/Kotlin APK projeleri için merkezi sürüm kontrol ve dağıtım servisidir. Android uygulaması API'ye kendi `package_name` ve `versionCode` bilgisiyle istek atar; servis son yayınlanan sürümü, güncellemenin zorunlu olup olmadığını ve APK indirme URL'sini döner.
 
-## Local Development
+## Yerel Geliştirme
 
-The project is expected to live on the data drive:
+Projenin veri diskinde çalışması beklenir:
 
 ```bash
 cd /e/Codex/apk-apps
 ```
 
-On Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 cd E:\Codex\apk-apps
@@ -29,13 +29,13 @@ docker compose exec app php artisan migrate --force
 docker compose exec app php artisan admin:create
 ```
 
-Admin panel:
+Admin paneli:
 
 ```text
 http://localhost:8080
 ```
 
-Health checks:
+Sağlık kontrolleri:
 
 ```text
 http://localhost:8080/health/live
@@ -44,9 +44,9 @@ http://localhost:8080/health/ready
 
 ## Docker Desktop
 
-The compose project name is `apk-apps`. If Docker Desktop does not show the containers, verify that Docker Desktop is using the `desktop-linux` context and clear any UI filters.
+Compose proje adı `apk-apps` olarak görünür. Docker Desktop containerları göstermiyorsa Docker Desktop'ın `desktop-linux` context'ini kullandığını doğrulayın ve arayüz filtrelerini temizleyin.
 
-CLI verification:
+CLI doğrulaması:
 
 ```powershell
 docker context ls
@@ -54,7 +54,7 @@ docker compose ls
 docker ps
 ```
 
-Expected local services:
+Beklenen yerel servisler:
 
 ```text
 apk-apps-web-1  127.0.0.1:8080->80/tcp
@@ -62,7 +62,7 @@ apk-apps-app-1  9000/tcp
 apk-apps-db-1   127.0.0.1:54329->5432/tcp
 ```
 
-## Quality
+## Kalite
 
 ```powershell
 docker compose exec app composer validate --strict
@@ -73,7 +73,7 @@ docker compose exec app vendor/bin/deptrac analyse
 docker compose exec app npm run build
 ```
 
-Or:
+Veya:
 
 ```powershell
 make quality
@@ -81,16 +81,16 @@ make quality
 
 ## API
 
-Update check:
+Güncelleme kontrolü:
 
 ```http
 GET /api/v1/applications/{packageName}/channels/{channel}/update-check?current_version_code=12
 ```
 
-Artifact download:
+APK indirme:
 
 ```http
 GET /api/v1/artifacts/{releaseId}/download
 ```
 
-Only published releases can be downloaded. Draft uploads remain inaccessible until published to a channel.
+Yalnızca yayınlanmış sürümler indirilebilir. Taslak yüklemeler bir kanala yayınlanana kadar erişilemez.

@@ -1,16 +1,16 @@
-# Project Agent Notes
+# Proje Ajan Notları
 
-This repository is `apk-apps`, a private APK release management service.
+Bu repository `apk-apps` projesidir; özel APK sürüm yönetimi servisi olarak geliştirilir.
 
-## Product Direction
+## Ürün Yönü
 
-- Laravel 13, PHP 8.4, PostgreSQL 17, Blade, Vite, Nginx, and PHP-FPM are the default stack.
-- Keep UI -> application -> domain -> infrastructure dependencies one-way.
-- Do not add public app discovery, scraping, DRM bypass, or unauthorized distribution features.
-- Treat APK artifacts, admin accounts, update policies, and production secrets as sensitive.
-- Work from `E:\Codex\apk-apps` on this machine. Do not move or delete files from `C:` without explicit user approval.
+- Varsayılan teknoloji yığını Laravel 13, PHP 8.4, PostgreSQL 17, Blade, Vite, Nginx ve PHP-FPM'dir.
+- Bağımlılık yönü UI -> application -> domain -> infrastructure şeklinde tek yönlü kalmalıdır.
+- Herkese açık uygulama keşfi, kaynak kazıma, DRM bypass veya yetkisiz dağıtım özelliği eklemeyin.
+- APK çıktı dosyalarını, admin hesaplarını, güncelleme politikalarını ve üretim gizli bilgilerini hassas kabul edin.
+- Bu makinede `E:\Codex\apk-apps` üzerinden çalışın. Kullanıcı açık onay vermeden `C:` altındaki dosyaları taşımayın veya silmeyin.
 
-## Local Commands
+## Yerel Komutlar
 
 - `docker compose up -d --build`
 - `docker compose exec app php artisan migrate --force`
