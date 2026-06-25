@@ -83,6 +83,8 @@ make quality
 
 Agent ile uygulama, release, publish ve rollback işlemleri için odaklı rehber: [Agent Kullanım Rehberi](docs/agent-kullanim-rehberi.md).
 
+Android/Kotlin uygulamalarının update-check, APK indirme ve kurulum akışı için rehber: [Mobil Uygulama Entegrasyon Rehberi](docs/mobil-uygulama-entegrasyon-rehberi.md).
+
 Güncelleme kontrolü:
 
 ```http
