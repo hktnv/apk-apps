@@ -19,6 +19,8 @@ interface AgentRepository
 
     public function setActive(string $id, bool $active): bool;
 
+    public function updateSecretHash(string $id, string $secretHash): bool;
+
     /** @return Collection<int, AgentView> */
     public function all(): Collection;
 }

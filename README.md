@@ -81,6 +81,8 @@ make quality
 
 ## API
 
+Agent ile uygulama, release, publish ve rollback işlemleri için odaklı rehber: [Agent Kullanım Rehberi](docs/agent-kullanim-rehberi.md).
+
 Güncelleme kontrolü:
 
 ```http

@@ -30,6 +30,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function (): v
     Route::post('/agents', [AgentController::class, 'store'])->name('agents.store');
     Route::post('/agents/{agentId}/activate', [AgentController::class, 'activate'])->name('agents.activate');
     Route::post('/agents/{agentId}/deactivate', [AgentController::class, 'deactivate'])->name('agents.deactivate');
+    Route::post('/agents/{agentId}/rotate-secret', [AgentController::class, 'rotateSecret'])->name('agents.rotate-secret');
 
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');

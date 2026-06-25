@@ -176,6 +176,32 @@ final class AdminReleaseFlowTest extends TestCase
             ->assertCreated()
             ->assertJsonPath('data.action', 'publish');
 
+        $dbAgentId = (string) DB::table('agents')->where('agent_id', $agentId)->value('id');
+
+        $this->actingAs($admin)
+            ->withSession(['_token' => $csrfToken])
+            ->post('/admin/agents/'.$dbAgentId.'/rotate-secret', ['_token' => $csrfToken])
+            ->assertRedirect('/admin/agents')
+            ->assertSessionHas('created_agent_id', $agentId)
+            ->assertSessionHas('created_agent_secret');
+
+        $newSecret = (string) session('created_agent_secret');
+        $newSecretHash = (string) DB::table('agents')->where('agent_id', $agentId)->value('secret_hash');
+
+        self::assertNotSame($agentSecret, $newSecret);
+        self::assertFalse(Hash::check($agentSecret, $newSecretHash));
+        self::assertTrue(Hash::check($newSecret, $newSecretHash));
+
+        $this->withHeaders($headers)->getJson('/api/v1/agent/applications')
+            ->assertUnauthorized()
+            ->assertJsonPath('error.code', 'AGENT_AUTH_FAILED');
+
+        $headers['X-Agent-Secret'] = $newSecret;
+
+        $this->withHeaders($headers)->getJson('/api/v1/agent/applications')
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
+
         DB::table('agents')->where('agent_id', $agentId)->update(['is_active' => false]);
 
         $this->withHeaders($headers)->getJson('/api/v1/agent/applications')

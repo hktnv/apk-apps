@@ -27,10 +27,16 @@
                     <td><code>{{ $agent->agentId }}</code></td>
                     <td>{{ $agent->isActive ? 'Aktif' : 'Pasif' }}</td>
                     <td>
+                        <div class="actions">
                         <form method="post" action="{{ route($agent->isActive ? 'admin.agents.deactivate' : 'admin.agents.activate', ['agentId' => $agent->id]) }}">
                             @csrf
                             <button class="secondary" type="submit">{{ $agent->isActive ? 'Pasifleştir' : 'Aktifleştir' }}</button>
                         </form>
+                        <form method="post" action="{{ route('admin.agents.rotate-secret', ['agentId' => $agent->id]) }}">
+                            @csrf
+                            <button class="secondary" type="submit">Secret yenile</button>
+                        </form>
+                        </div>
                     </td>
                 </tr>
             @empty

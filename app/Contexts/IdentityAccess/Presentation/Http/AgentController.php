@@ -8,6 +8,8 @@ use App\Contexts\IdentityAccess\Application\CreateAgent;
 use App\Contexts\IdentityAccess\Application\CreateAgentCommand;
 use App\Contexts\IdentityAccess\Application\CreatedAgentView;
 use App\Contexts\IdentityAccess\Application\ListAgents;
+use App\Contexts\IdentityAccess\Application\RotateAgentSecret;
+use App\Contexts\IdentityAccess\Application\RotatedAgentSecretView;
 use App\Contexts\IdentityAccess\Application\SetAgentActiveStatus;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -68,5 +70,21 @@ final class AgentController
         return $result->ok
             ? back()->with('status', 'Agent pasifleştirildi.')
             : back()->withErrors(['form' => $result->message]);
+    }
+
+    public function rotateSecret(string $agentId, RotateAgentSecret $rotateAgentSecret): RedirectResponse
+    {
+        $result = $rotateAgentSecret->execute($agentId);
+        if (! $result->ok) {
+            return back()->withErrors(['form' => $result->message]);
+        }
+
+        /** @var RotatedAgentSecretView $rotated */
+        $rotated = $result->value;
+
+        return redirect()->route('admin.agents.index')
+            ->with('status', 'Agent secret yenilendi. Eski secret artık geçerli değil.')
+            ->with('created_agent_id', $rotated->agent->agentId)
+            ->with('created_agent_secret', $rotated->secret);
     }
 }

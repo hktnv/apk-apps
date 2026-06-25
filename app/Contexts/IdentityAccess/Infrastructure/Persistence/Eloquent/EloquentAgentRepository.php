@@ -41,6 +41,11 @@ final class EloquentAgentRepository implements AgentRepository
         return AgentRecord::query()->whereKey($id)->update(['is_active' => $active]) === 1;
     }
 
+    public function updateSecretHash(string $id, string $secretHash): bool
+    {
+        return AgentRecord::query()->whereKey($id)->update(['secret_hash' => $secretHash]) === 1;
+    }
+
     /** @return Collection<int, AgentView> */
     public function all(): Collection
     {

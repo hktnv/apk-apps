@@ -12,13 +12,14 @@ final class CreateAgent
     public function __construct(
         private readonly AgentRepository $agents,
         private readonly AgentSecretHasher $hasher,
+        private readonly AgentSecretGenerator $secrets,
         private readonly IdentifierGenerator $ids,
     ) {}
 
     public function execute(CreateAgentCommand $command): OperationResult
     {
         $agentId = $this->newAgentId();
-        $secret = 'sec_'.bin2hex(random_bytes(32));
+        $secret = $this->secrets->newSecret();
 
         $agent = $this->agents->create([
             'id' => $this->ids->newUlid(),
