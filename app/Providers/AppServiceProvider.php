@@ -4,7 +4,11 @@ namespace App\Providers;
 
 use App\Contexts\ApplicationCatalog\Application\ManagedApplicationRepository;
 use App\Contexts\ApplicationCatalog\Infrastructure\Persistence\Eloquent\EloquentManagedApplicationRepository;
+use App\Contexts\IdentityAccess\Application\AgentRepository;
+use App\Contexts\IdentityAccess\Application\AgentSecretHasher;
 use App\Contexts\IdentityAccess\Infrastructure\Console\CreateAdminUserCommand;
+use App\Contexts\IdentityAccess\Infrastructure\Persistence\Eloquent\EloquentAgentRepository;
+use App\Contexts\IdentityAccess\Infrastructure\Security\LaravelAgentSecretHasher;
 use App\Contexts\ReleaseDistribution\Application\ApkFileValidator;
 use App\Contexts\ReleaseDistribution\Application\ArtifactStorage;
 use App\Contexts\ReleaseDistribution\Application\PublicationRepository;
@@ -32,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(Clock::class, SystemClock::class);
         $this->app->bind(TransactionRunner::class, LaravelTransactionRunner::class);
         $this->app->bind(ManagedApplicationRepository::class, EloquentManagedApplicationRepository::class);
+        $this->app->bind(AgentRepository::class, EloquentAgentRepository::class);
+        $this->app->bind(AgentSecretHasher::class, LaravelAgentSecretHasher::class);
         $this->app->bind(ReleaseRepository::class, EloquentReleaseRepository::class);
         $this->app->bind(PublicationRepository::class, EloquentPublicationRepository::class);
         $this->app->bind(ArtifactStorage::class, LocalArtifactStorage::class);

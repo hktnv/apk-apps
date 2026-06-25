@@ -22,12 +22,7 @@ final class AdminReleaseFlowTest extends TestCase
         $csrfToken = 'test-token';
 
         Storage::fake('apks');
-        $admin = AdminUserRecord::query()->create([
-            'id' => '01J00000000000000000000000',
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('secret-password'),
-        ]);
+        $admin = $this->createAdmin();
 
         $this->withSession(['_token' => $csrfToken])->post('/login', [
             '_token' => $csrfToken,
@@ -40,13 +35,16 @@ final class AdminReleaseFlowTest extends TestCase
             ->post('/admin/applications', [
                 '_token' => $csrfToken,
                 'name' => 'Example App',
-                'slug' => 'example-app',
                 'package_name' => 'com.habersoft.example',
                 'description' => 'Demo',
             ])
             ->assertRedirect();
 
         $applicationId = (string) DB::table('managed_applications')->value('id');
+        $this->assertDatabaseHas('managed_applications', [
+            'id' => $applicationId,
+            'slug' => 'example-app',
+        ]);
         $apk = $this->makeApkUpload();
 
         $this->actingAs($admin)
@@ -93,6 +91,106 @@ final class AdminReleaseFlowTest extends TestCase
         $this->get('/api/v1/artifacts/'.$releaseId.'/download')
             ->assertOk()
             ->assertHeader('X-APK-SHA256');
+    }
+
+    public function test_application_slug_is_generated_and_made_unique(): void
+    {
+        $csrfToken = 'test-token';
+        $admin = $this->createAdmin();
+
+        foreach (['com.habersoft.first', 'com.habersoft.second'] as $packageName) {
+            $this->actingAs($admin)
+                ->withSession(['_token' => $csrfToken])
+                ->post('/admin/applications', [
+                    '_token' => $csrfToken,
+                    'name' => 'Haber Soft',
+                    'package_name' => $packageName,
+                ])
+                ->assertRedirect();
+        }
+
+        $this->assertDatabaseHas('managed_applications', ['package_name' => 'com.habersoft.first', 'slug' => 'haber-soft']);
+        $this->assertDatabaseHas('managed_applications', ['package_name' => 'com.habersoft.second', 'slug' => 'haber-soft-2']);
+    }
+
+    public function test_active_agent_can_use_api_and_inactive_agent_is_rejected(): void
+    {
+        $csrfToken = 'test-token';
+
+        Storage::fake('apks');
+        $admin = $this->createAdmin();
+
+        $this->actingAs($admin)
+            ->withSession(['_token' => $csrfToken])
+            ->post('/admin/agents', [
+                '_token' => $csrfToken,
+                'name' => 'CI Agent',
+            ])
+            ->assertRedirect('/admin/agents')
+            ->assertSessionHas('created_agent_id')
+            ->assertSessionHas('created_agent_secret');
+
+        $agentId = (string) session('created_agent_id');
+        $agentSecret = (string) session('created_agent_secret');
+        $secretHash = (string) DB::table('agents')->where('agent_id', $agentId)->value('secret_hash');
+
+        self::assertNotSame($agentSecret, $secretHash);
+        self::assertTrue(Hash::check($agentSecret, $secretHash));
+
+        $headers = [
+            'X-Agent-Id' => $agentId,
+            'X-Agent-Secret' => $agentSecret,
+        ];
+
+        $createResponse = $this->withHeaders($headers)->postJson('/api/v1/agent/applications', [
+            'name' => 'Agent App',
+            'package_name' => 'com.habersoft.agent',
+            'description' => 'Agent ile oluşturuldu',
+        ]);
+
+        $createResponse
+            ->assertCreated()
+            ->assertJsonPath('data.slug', 'agent-app');
+
+        $applicationId = (string) $createResponse->json('data.id');
+
+        $uploadResponse = $this->withHeaders($headers)->post('/api/v1/agent/applications/'.$applicationId.'/releases', [
+            'version_code' => 21,
+            'version_name' => '2.1.0',
+            'release_notes' => 'Agent yayını',
+            'apk' => $this->makeApkUpload(),
+        ]);
+
+        $uploadResponse
+            ->assertCreated()
+            ->assertJsonPath('data.version_code', 21);
+
+        $releaseId = (string) $uploadResponse->json('data.id');
+
+        $this->withHeaders($headers)->postJson('/api/v1/agent/applications/'.$applicationId.'/releases/'.$releaseId.'/publish', [
+            'channel' => 'stable',
+            'force_update' => false,
+            'minimum_supported_version_code' => 0,
+            'comment' => 'Agent stable yayını',
+        ])
+            ->assertCreated()
+            ->assertJsonPath('data.action', 'publish');
+
+        DB::table('agents')->where('agent_id', $agentId)->update(['is_active' => false]);
+
+        $this->withHeaders($headers)->getJson('/api/v1/agent/applications')
+            ->assertForbidden()
+            ->assertJsonPath('error.code', 'AGENT_INACTIVE');
+    }
+
+    private function createAdmin(): AdminUserRecord
+    {
+        return AdminUserRecord::query()->create([
+            'id' => '01J00000000000000000000000',
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('secret-password'),
+        ]);
     }
 
     private function makeApkUpload(): UploadedFile

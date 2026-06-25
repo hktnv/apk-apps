@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Contexts\ApplicationCatalog\Presentation\Http\ApplicationController;
+use App\Contexts\IdentityAccess\Presentation\Http\AgentController;
 use App\Contexts\IdentityAccess\Presentation\Http\LoginController;
 use App\Contexts\ReleaseDistribution\Presentation\Http\AdminReleaseController;
 use App\Contexts\ReleaseDistribution\Presentation\Http\DashboardController;
@@ -23,6 +24,12 @@ Route::middleware('guest')->group(function (): void {
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function (): void {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     Route::get('/', DashboardController::class)->name('dashboard');
+
+    Route::get('/agents', [AgentController::class, 'index'])->name('agents.index');
+    Route::get('/agents/create', [AgentController::class, 'create'])->name('agents.create');
+    Route::post('/agents', [AgentController::class, 'store'])->name('agents.store');
+    Route::post('/agents/{agentId}/activate', [AgentController::class, 'activate'])->name('agents.activate');
+    Route::post('/agents/{agentId}/deactivate', [AgentController::class, 'deactivate'])->name('agents.deactivate');
 
     Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
     Route::get('/applications/create', [ApplicationController::class, 'create'])->name('applications.create');

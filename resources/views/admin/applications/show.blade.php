@@ -3,6 +3,10 @@
         <p><strong>Package:</strong> {{ $application->packageName }}</p>
         <p><strong>Slug:</strong> {{ $application->slug }}</p>
         <p><strong>Durum:</strong> {{ $application->isActive ? 'Aktif' : 'Pasif' }}</p>
+        <div class="guide">
+            <strong>Bu sayfada ne yapılır?</strong>
+            <p class="muted">Yeni APK yükleyebilir, yüklenen sürümü bir kanalda yayınlayabilir veya sorun olduğunda rollback akışını başlatabilirsiniz.</p>
+        </div>
         <p><strong>Update endpoint:</strong><br><code>{{ url('/api/v1/applications/'.$application->packageName.'/channels/stable/update-check?current_version_code=1') }}</code></p>
         <div class="actions">
             <a class="button secondary" href="{{ route('admin.applications.edit', ['applicationId' => $application->id]) }}">Düzenle</a>

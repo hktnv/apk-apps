@@ -1,5 +1,10 @@
 <x-layouts.admin title="Rollback">
     <section class="card">
+        <div class="guide">
+            <strong>Rollback nedir?</strong>
+            <p class="muted">Rollback, sorunlu bir yayını durdurup seçtiğiniz daha uygun bir sürümü tekrar aktif kanala bağlar.</p>
+            <p class="muted">Cihazda daha yüksek version code yüklüyse Android otomatik downgrade yapmaz; bu işlem yeni kurulumlar ve uygun cihazlar için güvenli bir dönüş noktası sağlar.</p>
+        </div>
         <p class="error">Android, cihazda daha yüksek version_code yüklüyse otomatik downgrade yapamaz. Rollback yalnızca daha düşük sürümü yeni kuracak veya uygun cihazlara sunar.</p>
         <form method="post" action="{{ route('admin.publications.rollback', ['applicationId' => $application->id]) }}">
             @csrf

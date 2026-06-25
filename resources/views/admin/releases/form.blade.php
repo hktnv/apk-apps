@@ -1,5 +1,9 @@
 <x-layouts.admin title="APK Yükle">
     <section class="card">
+        <div class="guide">
+            <strong>APK yükleme</strong>
+            <p class="muted">Önce imzalı APK dosyasını yüklersiniz. Kullanıcılara dağıtım başlamaz; yayınlamak için sonraki ekranda kanal seçmeniz gerekir.</p>
+        </div>
         <form method="post" enctype="multipart/form-data" action="{{ route('admin.releases.store', ['applicationId' => $application->id]) }}">
             @csrf
             <label>Version code</label>

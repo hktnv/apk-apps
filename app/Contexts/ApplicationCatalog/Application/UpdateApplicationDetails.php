@@ -12,17 +12,14 @@ final class UpdateApplicationDetails
 
     public function execute(UpdateApplicationDetailsCommand $command): OperationResult
     {
-        if ($this->applications->find($command->id) === null) {
+        $application = $this->applications->find($command->id);
+        if ($application === null) {
             return OperationResult::failure('APPLICATION_NOT_FOUND', 'Uygulama bulunamadı.');
-        }
-
-        if ($this->applications->existsBySlug($command->slug, $command->id)) {
-            return OperationResult::failure('DUPLICATE_SLUG', 'Bu slug zaten kullanılıyor.');
         }
 
         $this->applications->update($command->id, [
             'name' => $command->name,
-            'slug' => $command->slug,
+            'slug' => $application->slug,
             'description' => $command->description,
         ]);
 

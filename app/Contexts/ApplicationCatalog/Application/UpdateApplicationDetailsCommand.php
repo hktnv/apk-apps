@@ -9,7 +9,6 @@ final readonly class UpdateApplicationDetailsCommand
     public function __construct(
         public string $id,
         public string $name,
-        public string $slug,
         public ?string $description,
     ) {}
 }

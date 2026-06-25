@@ -17,6 +17,7 @@
             <nav class="nav">
                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
                 <a href="{{ route('admin.applications.index') }}">Uygulamalar</a>
+                <a href="{{ route('admin.agents.index') }}">Agentlar</a>
                 <form method="post" action="{{ route('admin.logout') }}">
                     @csrf
                     <button class="secondary" type="submit">Çıkış</button>

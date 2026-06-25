@@ -14,6 +14,7 @@ final class CreateApplication
     public function __construct(
         private readonly ManagedApplicationRepository $applications,
         private readonly IdentifierGenerator $ids,
+        private readonly ApplicationSlugGenerator $slugs,
     ) {}
 
     public function execute(CreateApplicationCommand $command): OperationResult
@@ -24,18 +25,16 @@ final class CreateApplication
             return OperationResult::failure('INVALID_PACKAGE_NAME', 'Android package adı geçerli değil.');
         }
 
-        if ($this->applications->existsBySlug($command->slug)) {
-            return OperationResult::failure('DUPLICATE_SLUG', 'Bu slug zaten kullanılıyor.');
-        }
-
         if ($this->applications->existsByPackageName($command->packageName)) {
             return OperationResult::failure('DUPLICATE_PACKAGE_NAME', 'Bu package name zaten kullanılıyor.');
         }
 
+        $slug = $this->slugs->uniqueForName($command->name);
+
         return OperationResult::success($this->applications->create([
             'id' => $this->ids->newUlid(),
             'name' => $command->name,
-            'slug' => $command->slug,
+            'slug' => $slug,
             'package_name' => $command->packageName,
             'description' => $command->description,
             'is_active' => true,

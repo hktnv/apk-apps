@@ -8,7 +8,6 @@ final readonly class CreateApplicationCommand
 {
     public function __construct(
         public string $name,
-        public string $slug,
         public string $packageName,
         public ?string $description,
     ) {}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Contexts\IdentityAccess\Infrastructure\Http\AgentAuthenticationMiddleware;
 use App\SharedKernel\Infrastructure\Http\RequestIdMiddleware;
 use App\SharedKernel\Infrastructure\Http\SecurityHeadersMiddleware;
 use Illuminate\Foundation\Application;
@@ -25,6 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->api(append: [
             SecurityHeadersMiddleware::class,
+        ]);
+
+        $middleware->alias([
+            'agent.auth' => AgentAuthenticationMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

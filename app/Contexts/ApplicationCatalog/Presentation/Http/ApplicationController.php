@@ -37,14 +37,12 @@ final class ApplicationController
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
             'package_name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
         ]);
 
         $result = $createApplication->execute(new CreateApplicationCommand(
             $data['name'],
-            $data['slug'],
             $data['package_name'],
             $data['description'] ?? null,
         ));
@@ -90,14 +88,12 @@ final class ApplicationController
     ): RedirectResponse {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/'],
             'description' => ['nullable', 'string'],
         ]);
 
         $result = $updateApplicationDetails->execute(new UpdateApplicationDetailsCommand(
             $applicationId,
             $data['name'],
-            $data['slug'],
             $data['description'] ?? null,
         ));
 
