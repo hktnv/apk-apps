@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+
+    services:
+      postgres:
+        image: postgres:17.5-bookworm
+        env:
+          POSTGRES_DB: apk_apps
+          POSTGRES_USER: apk_apps
+          POSTGRES_PASSWORD: apk_apps_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U apk_apps -d apk_apps"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: intl, pdo_pgsql, zip
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.4.1"
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Prepare environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate --force
+
+      - name: Validate composer
+        run: composer validate --strict
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Test
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: apk_apps
+          DB_USERNAME: apk_apps
+          DB_PASSWORD: apk_apps_password
+        run: php artisan test
+
+      - name: Pint
+        run: vendor/bin/pint --test
+
+      - name: PHPStan
+        run: vendor/bin/phpstan analyse
+
+      - name: Deptrac
+        run: vendor/bin/deptrac analyse --no-progress

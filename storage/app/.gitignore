@@ -1,0 +1,5 @@
+*
+!apks/
+!private/
+!public/
+!.gitignore

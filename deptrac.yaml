@@ -1,0 +1,40 @@
+deptrac:
+  paths:
+    - ./app
+  layers:
+    - name: Presentation
+      collectors:
+        - type: classLike
+          value: App\\Contexts\\.*\\Presentation\\.*
+    - name: Application
+      collectors:
+        - type: classLike
+          value: App\\Contexts\\.*\\Application\\.*
+    - name: Domain
+      collectors:
+        - type: classLike
+          value: App\\Contexts\\.*\\Domain\\.*
+    - name: Infrastructure
+      collectors:
+        - type: classLike
+          value: App\\Contexts\\.*\\Infrastructure\\.*
+    - name: SharedKernel
+      collectors:
+        - type: classLike
+          value: App\\SharedKernel\\.*
+  ruleset:
+    Presentation:
+      - Application
+      - Domain
+      - SharedKernel
+    Application:
+      - Domain
+      - SharedKernel
+    Infrastructure:
+      - Application
+      - Domain
+      - SharedKernel
+    Domain:
+      - SharedKernel
+    SharedKernel:
+      - SharedKernel
