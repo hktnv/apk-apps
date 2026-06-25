@@ -19,7 +19,7 @@ final class UpdateCheckController
         CheckForUpdate $checkForUpdate,
     ): JsonResponse {
         $validated = $request->validate([
-            'current_version_code' => ['required', 'integer', 'min:1'],
+            'current_version_code' => ['required', 'integer', 'min:0'],
         ]);
 
         $result = $checkForUpdate->execute($packageName, $channel, (int) $validated['current_version_code']);

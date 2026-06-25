@@ -80,6 +80,13 @@ final class AdminReleaseFlowTest extends TestCase
             ->assertJsonPath('data.required', true)
             ->assertJsonPath('data.release.version_code', 13);
 
+        $this->getJson('/api/v1/applications/com.habersoft.example/channels/stable/update-check?current_version_code=0')
+            ->assertOk()
+            ->assertJsonPath('data.status', 'UPDATE_AVAILABLE')
+            ->assertJsonPath('data.required', true)
+            ->assertJsonPath('data.current_version_code', 0)
+            ->assertJsonPath('data.release.version_code', 13);
+
         $this->getJson('/api/v1/applications/com.habersoft.example/channels/stable/update-check?current_version_code=13')
             ->assertOk()
             ->assertJsonPath('data.status', 'UP_TO_DATE');
@@ -111,6 +118,13 @@ final class AdminReleaseFlowTest extends TestCase
 
         $this->assertDatabaseHas('managed_applications', ['package_name' => 'com.habersoft.first', 'slug' => 'haber-soft']);
         $this->assertDatabaseHas('managed_applications', ['package_name' => 'com.habersoft.second', 'slug' => 'haber-soft-2']);
+    }
+
+    public function test_zero_version_update_check_returns_controlled_error_when_application_is_missing(): void
+    {
+        $this->getJson('/api/v1/applications/com.habersoft.missing/channels/stable/update-check?current_version_code=0')
+            ->assertNotFound()
+            ->assertJsonPath('error.code', 'APPLICATION_NOT_FOUND');
     }
 
     public function test_active_agent_can_use_api_and_inactive_agent_is_rejected(): void
