@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             RequestIdMiddleware::class,
             SecurityHeadersMiddleware::class,
@@ -43,6 +46,19 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             $requestId = (string) $request->attributes->get('request_id', '');
+
+            if ($exception instanceof ValidationException) {
+                return response()->json([
+                    'error' => [
+                        'code' => 'VALIDATION_FAILED',
+                        'message' => 'İstek geçerli değil.',
+                        'fields' => $exception->errors(),
+                    ],
+                    'meta' => [
+                        'request_id' => $requestId,
+                    ],
+                ], 422);
+            }
 
             return response()->json([
                 'error' => [

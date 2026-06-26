@@ -80,6 +80,13 @@ final class AdminReleaseFlowTest extends TestCase
             ->assertJsonPath('data.required', true)
             ->assertJsonPath('data.release.version_code', 13);
 
+        $proxiedResponse = $this->withServerVariables([
+            'HTTP_X_FORWARDED_PROTO' => 'https',
+        ])->getJson('/api/v1/applications/com.habersoft.example/channels/stable/update-check?current_version_code=12');
+
+        $proxiedResponse->assertOk();
+        self::assertStringStartsWith('https://', (string) $proxiedResponse->json('data.release.download_url'));
+
         $this->getJson('/api/v1/applications/com.habersoft.example/channels/stable/update-check?current_version_code=0')
             ->assertOk()
             ->assertJsonPath('data.status', 'UPDATE_AVAILABLE')
@@ -125,6 +132,10 @@ final class AdminReleaseFlowTest extends TestCase
         $this->getJson('/api/v1/applications/com.habersoft.missing/channels/stable/update-check?current_version_code=0')
             ->assertNotFound()
             ->assertJsonPath('error.code', 'APPLICATION_NOT_FOUND');
+
+        $this->getJson('/api/v1/applications/com.habersoft.missing/channels/stable/update-check?current_version_code=-1')
+            ->assertUnprocessable()
+            ->assertJsonPath('error.code', 'VALIDATION_FAILED');
     }
 
     public function test_active_agent_can_use_api_and_inactive_agent_is_rejected(): void
