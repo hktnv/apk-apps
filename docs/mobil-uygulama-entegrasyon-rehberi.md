@@ -212,6 +212,17 @@ suspend fun downloadAndInstall(release: ReleaseInfo) {
 }
 ```
 
+## İstatistikler Ne Anlama Gelir?
+
+Servis, uygulama bazında toplam update-check ve APK indirme sayılarını tutar. Bu sayılar admin panelde ve agent API'de görünür.
+
+- `update_check_count`: Mobil uygulamalardan gelen başarılı update-check istekleri.
+- `update_available_count`: Yeni sürüm var cevabı dönen istekler.
+- `up_to_date_count`: Kurulu sürüm güncel cevabı dönen istekler.
+- `apk_download_count`: Başarılı APK indirme istekleri.
+
+Mobil uygulama bu sayaçlar için ek veri göndermek zorunda değildir. IP, cihaz kimliği, user-agent analitiği veya kullanıcı takibi bu kapsamda tutulmaz.
+
 ## Güvenlik Notları
 
 - Her zaman HTTPS kullanın.

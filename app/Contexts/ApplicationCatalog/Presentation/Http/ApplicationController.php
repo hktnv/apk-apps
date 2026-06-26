@@ -11,6 +11,7 @@ use App\Contexts\ApplicationCatalog\Application\ListApplications;
 use App\Contexts\ApplicationCatalog\Application\SetApplicationActiveStatus;
 use App\Contexts\ApplicationCatalog\Application\UpdateApplicationDetails;
 use App\Contexts\ApplicationCatalog\Application\UpdateApplicationDetailsCommand;
+use App\Contexts\ReleaseDistribution\Application\ApplicationStatisticsRepository;
 use App\Contexts\ReleaseDistribution\Application\PublicationRepository;
 use App\Contexts\ReleaseDistribution\Application\ReleaseRepository;
 use Illuminate\Http\RedirectResponse;
@@ -60,6 +61,7 @@ final class ApplicationController
         GetApplicationDetails $details,
         ReleaseRepository $releases,
         PublicationRepository $publications,
+        ApplicationStatisticsRepository $statistics,
     ): View {
         $application = $details->execute($applicationId);
         abort_if($application === null, 404);
@@ -68,6 +70,7 @@ final class ApplicationController
             'application' => $application,
             'releases' => $releases->listForApplication($applicationId),
             'publications' => $publications->historyForApplication($applicationId),
+            'statistics' => $statistics->getForApplication($applicationId),
         ]);
     }
 

@@ -42,6 +42,7 @@ final class CheckForUpdate
         );
 
         return OperationResult::success(new CheckForUpdateResult(
+            $application->id,
             $packageName,
             $channel->value,
             $currentVersionCode,

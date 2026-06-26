@@ -10,9 +10,11 @@ use App\Contexts\IdentityAccess\Infrastructure\Console\CreateAdminUserCommand;
 use App\Contexts\IdentityAccess\Infrastructure\Persistence\Eloquent\EloquentAgentRepository;
 use App\Contexts\IdentityAccess\Infrastructure\Security\LaravelAgentSecretHasher;
 use App\Contexts\ReleaseDistribution\Application\ApkFileValidator;
+use App\Contexts\ReleaseDistribution\Application\ApplicationStatisticsRepository;
 use App\Contexts\ReleaseDistribution\Application\ArtifactStorage;
 use App\Contexts\ReleaseDistribution\Application\PublicationRepository;
 use App\Contexts\ReleaseDistribution\Application\ReleaseRepository;
+use App\Contexts\ReleaseDistribution\Infrastructure\Persistence\Eloquent\EloquentApplicationStatisticsRepository;
 use App\Contexts\ReleaseDistribution\Infrastructure\Persistence\Eloquent\EloquentPublicationRepository;
 use App\Contexts\ReleaseDistribution\Infrastructure\Persistence\Eloquent\EloquentReleaseRepository;
 use App\Contexts\ReleaseDistribution\Infrastructure\Storage\LocalArtifactStorage;
@@ -41,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AgentSecretHasher::class, LaravelAgentSecretHasher::class);
         $this->app->bind(ReleaseRepository::class, EloquentReleaseRepository::class);
         $this->app->bind(PublicationRepository::class, EloquentPublicationRepository::class);
+        $this->app->bind(ApplicationStatisticsRepository::class, EloquentApplicationStatisticsRepository::class);
         $this->app->bind(ArtifactStorage::class, LocalArtifactStorage::class);
         $this->app->bind(ApkFileValidator::class, ZipApkFileValidator::class);
     }

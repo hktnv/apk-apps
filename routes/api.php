@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Contexts\ApplicationCatalog\Presentation\Http\AgentApplicationApiController;
+use App\Contexts\ReleaseDistribution\Presentation\Http\AgentApplicationStatisticsApiController;
 use App\Contexts\ReleaseDistribution\Presentation\Http\AgentReleaseApiController;
 use App\Contexts\ReleaseDistribution\Presentation\Http\ArtifactDownloadController;
 use App\Contexts\ReleaseDistribution\Presentation\Http\UpdateCheckController;
@@ -21,6 +22,7 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/applications/{applicationId}', [AgentApplicationApiController::class, 'show'])->name('applications.show');
         Route::post('/applications/{applicationId}/activate', [AgentApplicationApiController::class, 'activate'])->name('applications.activate');
         Route::post('/applications/{applicationId}/deactivate', [AgentApplicationApiController::class, 'deactivate'])->name('applications.deactivate');
+        Route::get('/applications/{applicationId}/statistics', [AgentApplicationStatisticsApiController::class, 'show'])->name('applications.statistics.show');
         Route::post('/applications/{applicationId}/releases', [AgentReleaseApiController::class, 'store'])->name('releases.store');
         Route::post('/applications/{applicationId}/releases/{releaseId}/publish', [AgentReleaseApiController::class, 'publish'])->name('publications.publish');
         Route::post('/applications/{applicationId}/rollback', [AgentReleaseApiController::class, 'rollback'])->name('publications.rollback');

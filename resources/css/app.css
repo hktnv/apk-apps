@@ -35,6 +35,11 @@ button, .button {
 .guide { background: #0b1220; border: 1px solid #1f3b57; border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 1rem; }
 .guide p { margin: 0.35rem 0 0; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.stats-grid { margin: 1rem 0; }
+.stat-card { background: #0b1220; border: 1px solid #243449; border-radius: 12px; padding: 1rem; }
+.stat-card strong { display: block; margin: 0.35rem 0; color: #f8fafc; font-size: 1.45rem; line-height: 1.2; word-break: break-word; }
+.stat-card small { color: #94a3b8; }
+.stat-label { color: #cbd5e1; font-weight: 800; }
 .muted { color: #94a3b8; }
 .error { background: #7f1d1d; color: #fecaca; padding: 0.8rem; border-radius: 10px; }
 .status { background: #064e3b; color: #ccfbf1; padding: 0.8rem; border-radius: 10px; }

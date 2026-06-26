@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contexts\ReleaseDistribution\Presentation\Http;
 
+use App\Contexts\ReleaseDistribution\Application\ApplicationStatisticsRepository;
 use App\Contexts\ReleaseDistribution\Application\ArtifactStorage;
 use App\Contexts\ReleaseDistribution\Application\ReleaseView;
 use App\Contexts\ReleaseDistribution\Application\ResolveArtifactDownload;
@@ -18,6 +19,7 @@ final class ArtifactDownloadController
         Request $request,
         ResolveArtifactDownload $resolve,
         ArtifactStorage $storage,
+        ApplicationStatisticsRepository $statistics,
     ): BinaryFileResponse|JsonResponse {
         $result = $resolve->execute($releaseId);
 
@@ -43,6 +45,7 @@ final class ArtifactDownloadController
 
         /** @var ReleaseView $release */
         $release = $result->value;
+        $statistics->recordApkDownload($release->applicationId);
 
         return response()->download(
             $storage->absolutePath($release->storagePath),

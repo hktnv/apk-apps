@@ -9,6 +9,7 @@ use App\Contexts\ReleaseDistribution\Domain\UpdateDecision;
 final readonly class CheckForUpdateResult
 {
     public function __construct(
+        public string $applicationId,
         public string $packageName,
         public string $channel,
         public int $currentVersionCode,

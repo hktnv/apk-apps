@@ -151,6 +151,38 @@ curl -X POST "https://apk.habersoft.com/api/v1/agent/applications/{applicationId
 
 Android, cihazda daha yüksek `versionCode` yüklüyse otomatik downgrade yapmaz. Rollback yeni kurulumlar veya uygun cihazlar için güvenli bir dönüş noktası sağlar.
 
+## Uygulama İstatistiklerini Okuma
+
+Agent, bir uygulamanın basit update ve indirme istatistiklerini okuyabilir.
+
+```bash
+curl "https://apk.habersoft.com/api/v1/agent/applications/{applicationId}/statistics" \
+  -H "Accept: application/json" \
+  -H "X-Agent-Id: agt_PLACEHOLDER" \
+  -H "X-Agent-Secret: sec_PLACEHOLDER"
+```
+
+Örnek cevap:
+
+```json
+{
+  "data": {
+    "application_id": "01J...",
+    "update_check_count": 120,
+    "update_available_count": 35,
+    "up_to_date_count": 80,
+    "apk_download_count": 22,
+    "last_checked_at": "2026-06-26T12:00:00+00:00",
+    "last_downloaded_at": "2026-06-26T12:05:00+00:00"
+  },
+  "meta": {
+    "request_id": "01J..."
+  }
+}
+```
+
+Bu istatistikler toplam sayaçtır; IP, cihaz kimliği, user-agent analitiği veya kişisel takip verisi tutulmaz.
+
 ## Android Update Kontrol Mantığı
 
 Android uygulama kendi `package_name`, kanal ve mevcut `versionCode` değeriyle update-check çağırır.

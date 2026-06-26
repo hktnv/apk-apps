@@ -105,6 +105,14 @@ final class AdminReleaseFlowTest extends TestCase
         $this->get('/api/v1/artifacts/'.$releaseId.'/download')
             ->assertOk()
             ->assertHeader('X-APK-SHA256');
+
+        $this->assertDatabaseHas('application_statistics', [
+            'application_id' => $applicationId,
+            'update_check_count' => 5,
+            'update_available_count' => 3,
+            'up_to_date_count' => 1,
+            'apk_download_count' => 1,
+        ]);
     }
 
     public function test_application_slug_is_generated_and_made_unique(): void
@@ -226,6 +234,18 @@ final class AdminReleaseFlowTest extends TestCase
         $this->withHeaders($headers)->getJson('/api/v1/agent/applications')
             ->assertOk()
             ->assertJsonCount(1, 'data');
+
+        $this->getJson('/api/v1/applications/com.habersoft.agent/channels/stable/update-check?current_version_code=20')
+            ->assertOk()
+            ->assertJsonPath('data.status', 'UPDATE_AVAILABLE');
+
+        $this->withHeaders($headers)->getJson('/api/v1/agent/applications/'.$applicationId.'/statistics')
+            ->assertOk()
+            ->assertJsonPath('data.application_id', $applicationId)
+            ->assertJsonPath('data.update_check_count', 1)
+            ->assertJsonPath('data.update_available_count', 1)
+            ->assertJsonPath('data.up_to_date_count', 0)
+            ->assertJsonPath('data.apk_download_count', 0);
 
         DB::table('agents')->where('agent_id', $agentId)->update(['is_active' => false]);
 

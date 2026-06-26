@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contexts\ReleaseDistribution\Presentation\Http;
 
+use App\Contexts\ReleaseDistribution\Application\ApplicationStatisticsRepository;
 use App\Contexts\ReleaseDistribution\Application\CheckForUpdate;
 use App\Contexts\ReleaseDistribution\Application\CheckForUpdateResult;
 use App\Contexts\ReleaseDistribution\Domain\UpdateStatus;
@@ -17,6 +18,7 @@ final class UpdateCheckController
         string $channel,
         Request $request,
         CheckForUpdate $checkForUpdate,
+        ApplicationStatisticsRepository $statistics,
     ): JsonResponse {
         $validated = $request->validate([
             'current_version_code' => ['required', 'integer', 'min:0'],
@@ -31,6 +33,8 @@ final class UpdateCheckController
 
         /** @var CheckForUpdateResult $payload */
         $payload = $result->value;
+        $statistics->recordUpdateCheck($payload->applicationId, $payload->decision->status);
+
         $data = [
             'status' => $payload->decision->status->value,
             'package_name' => $payload->packageName,
