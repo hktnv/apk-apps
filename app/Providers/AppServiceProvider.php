@@ -23,6 +23,7 @@ use App\SharedKernel\Domain\TransactionRunner;
 use App\SharedKernel\Infrastructure\LaravelTransactionRunner;
 use App\SharedKernel\Infrastructure\SystemClock;
 use App\SharedKernel\Infrastructure\UlidIdentifierGenerator;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -49,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 CreateAdminUserCommand::class,
